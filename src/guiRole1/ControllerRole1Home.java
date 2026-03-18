@@ -165,14 +165,12 @@ public class ControllerRole1Home {
 				boolean postDeleted;
 				postDeleted = theDatabase.deletePost(post);
 				if(postDeleted) {
-					Alert deleteAlert = new Alert(Alert.AlertType.INFORMATION);
 					alert.setHeaderText("POST DELETED");
 					alert.setContentText("YOU HAVE SUCCESSFULLY DELETED THIS POST");
 					alert.showAndWait();
 					return true;
 				}
 				else {
-					Alert deleteAlert = new Alert(Alert.AlertType.INFORMATION);
 					alert.setHeaderText("COULD NOT DELETE POST");
 					alert.setContentText("THERE WAS AN ISSUE DELETING POST FROM DATABASE");
 					alert.showAndWait();
