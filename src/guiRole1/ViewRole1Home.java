@@ -205,7 +205,7 @@ public class ViewRole1Home {
 		displayPosts.setPrefSize(500, 200);
 		displayPosts.setLayoutX(20);
 		displayPosts.setLayoutY(200);
-		displayPosts.setCellFactory(lv -> new ListCell<String>() {
+		displayPosts.setCellFactory(_ -> new ListCell<String>() {
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
