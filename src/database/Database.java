@@ -173,6 +173,15 @@ public class Database {
     		+ "thread VARCHAR(255) DEFAULT 'General')";
 	
     statement.execute(replyTable);}
+	//HW2 thread table
+	String threadTable = "CREATE TABLE IF NOT EXISTS threadTypes("
+        + "id INT AUTO_INCREMENT PRIMARY KEY,"
+        + "thread_name VARCHAR(255) UNIQUE)";
+statement.execute(threadTable);
+
+statement.execute("INSERT INTO threadTypes (thread_name) "
+        + "SELECT 'General' WHERE NOT EXISTS "
+        + "(SELECT 1 FROM threadTypes WHERE thread_name = 'General')");
 
 /*******
  * <p> Method: isDatabaseEmpty </p>
