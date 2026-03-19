@@ -64,6 +64,17 @@ public class ControllerRole2Home {
 	private static int replyNumber;
 	private static String replyContent = "";
 	protected static Database theDatabase = applicationMain.FoundationsMain.database;
+
+	//HW2 Brenn combobox
+	protected static ComboBox<String> combobox_SelectPostThread = new ComboBox<>();
+	protected static ComboBox<String> combobox_FilterThread = new ComboBox<>();
+	protected static Label label_FilterThread = new Label("Filter by Thread:");
+	protected static Label label_ManageThreads = new Label("Manage Threads:");
+	protected static TextField text_NewThread = new TextField();
+	protected static Button button_AddThread = new Button("Add Thread");
+	protected static Button button_RemoveThread = new Button("Remove Thread");
+	protected static ListView<String> listView_Threads = new ListView<>();
+	
 	
 	public ControllerRole2Home() {
 	}
@@ -106,6 +117,8 @@ public class ControllerRole2Home {
 		setAuthor();
 		setContent();
 		setRole();
+		//HW2 Brenn
+		thread = ViewRole2Home.combobox_SelectPostThread.getValue();
 		
 	//input validation	
 		if(content.isEmpty()) {
@@ -239,9 +252,85 @@ public class ControllerRole2Home {
 		
 	}
 	
+	//HW2 Brenn PerformFilter
+	protected static void performFilter() {
+	    ViewRole2Home.postDisplay.setAll(getFilteredPosts());
+	}
+
+	protected static ObservableList<String> getFilteredPosts() {
+	    String selected = ViewRole2Home.combobox_FilterThread.getValue();
+	    if (selected == null || selected.equals("All")) {
+	        return theDatabase.displayPostsHelper();
+	    } else {
+	        return theDatabase.getPostsByThread(selected);
+	    }
+	}
 	
+	protected static void performAddThread() {
+	    String newThread = ViewRole2Home.text_NewThread.getText().trim();
+	    if (newThread.isEmpty()) {
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setHeaderText("Cannot add thread");
+	        alert.setContentText("Thread name cannot be empty.");
+	        alert.showAndWait();
+	        return;
+	    }
+	    boolean added = theDatabase.addThreadType(newThread);
+	    if (added) {
+	        ViewRole2Home.text_NewThread.clear();
+	        refreshAllThreadDropdowns();
+	    } else {
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setHeaderText("Could not add thread");
+	        alert.setContentText("That thread name may already exist.");
+	        alert.showAndWait();
+	    }
+	}
 	
+	protected static void performRemoveThread() {
+	    String selected = ViewRole2Home.listView_Threads.getSelectionModel().getSelectedItem();
+	    if (selected == null) {
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setHeaderText("No thread selected");
+	        alert.setContentText("Please select a thread from the list to remove.");
+	        alert.showAndWait();
+	        return;
+	    }
+	    if (selected.equals("General")) {
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setHeaderText("Cannot remove General");
+	        alert.setContentText("The General thread cannot be removed.");
+	        alert.showAndWait();
+	        return;
+	    }
+	    theDatabase.removeThreadType(selected);
+	    refreshAllThreadDropdowns();
+	}
 	
+	protected static void refreshAllThreadDropdowns() {
+	    List<String> threads = theDatabase.getAllThreadTypes();
+
+	    // Update the post thread selector
+	    ViewRole2Home.combobox_SelectPostThread.getItems().setAll(threads);
+	    ViewRole2Home.combobox_SelectPostThread.setValue("General");
+
+	    // Update the filter dropdown (with "All" at the front)
+	    List<String> filterOptions = new ArrayList<>(threads);
+	    filterOptions.add(0, "All");
+	    ViewRole2Home.combobox_FilterThread.getItems().setAll(filterOptions);
+	    ViewRole2Home.combobox_FilterThread.setValue("All");
+
+	    // Update the thread management list
+	    ViewRole2Home.listView_Threads.getItems().setAll(threads);
+	}
+	
+	protected static void setupComboBoxUI(ComboBox<String> c, String ff, double f, 
+	        double w, double x, double y) {
+	    c.setStyle("-fx-font: " + f + " " + ff + ";");
+	    c.setMinWidth(w);
+	    c.setLayoutX(x);
+	    c.setLayoutY(y);
+	}
 	
 	
 	
