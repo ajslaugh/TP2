@@ -112,6 +112,9 @@ public class ControllerRole1Home {
 		setAuthor();
 		setContent();
 		setRole();
+		//HW2 Brenn
+		thread = ViewRole1Home.combobox_SelectPostThread.getValue();
+		
 		//input validation
 		if(content.isEmpty()) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
