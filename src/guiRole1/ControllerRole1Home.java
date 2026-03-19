@@ -142,11 +142,27 @@ public class ControllerRole1Home {
 		ViewRole1Home.alertPosted.showAndWait();
 		
 		
+	}
 
-
-		
+	//HW2 Brenn 
+	//called when student uses the combobox
+	protected static void performFilter() {
+		String selected = ViewRole1Home.combobox_FilterThread.getValue();
+		ViewRole1Home.postDisplay.setAll(getFilteredPosts());
 		
 	}
+	
+	//HW2 Brenn 
+	protected static ObservableList<String> getFilteredPosts() {
+		String selected = ViewRole1Home.combobox_FilterThread.getValue();
+		if (selected == null || selected.equals("All")) {
+				return theDatabase.displayPostsHelper();
+		}
+		else {
+			return theDatabase.getPostsByThread(selected);
+		}
+	}
+	
 	//hw2 deletepost
 	protected static boolean deletePost(int post) {
 		Alert alert = new Alert(Alert.AlertType.NONE);
