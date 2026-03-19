@@ -198,8 +198,22 @@ public class ViewRole1Home {
 		setupLabelUI(label_CreatePost, "Arial", 20, 175, Pos.BASELINE_LEFT, 20, 110);
 		setupTextUI(text_PostContent, "Arial", 16, 350, Pos.BASELINE_LEFT,
 		140, 105, true);
-		setupButtonUI(button_Post,  "Dialog", 18, 170, Pos.CENTER, 525, 103);
+		setupButtonUI(button_Post,  "Dialog", 18, 100, Pos.CENTER, 680, 103);
 		button_Post.setOnAction((_) -> {ControllerRole1Home.performNewPost(); postDisplay.setAll(theDatabase.displayPostsHelper());});
+
+		//HW2 brenn
+		setupComboBoxUI(combobox_SelectPostThread, "Arial", 14, 130, 500, 108);
+		combobox_SelectPostThread.getItems().setAll(theDatabase.getAllThreadTypes());
+		combobox_SelectPostThread.setValue("General");
+		combobox_SelectPostThread.setMaxWidth(170);
+
+		setupLabelUI(label_FilterThread, "Arial", 16, 140, Pos.BASELINE_LEFT, 20, 165);
+		setupComboBoxUI(combobox_FilterThread, "Arial", 14, 130, 160, 163);
+		List<String> filterOptions = theDatabase.getAllThreadTypes();
+		filterOptions.add(0, "All");
+		combobox_FilterThread.getItems().setAll(filterOptions);
+		combobox_FilterThread.setValue("All");
+		combobox_FilterThread.setOnAction((_) -> { ControllerRole1Home.performFilter(); });
 		
 		//GUI Area 3 hw2
 	
