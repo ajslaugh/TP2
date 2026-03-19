@@ -107,6 +107,16 @@ public class ViewRole2Home {
 	private static Scene theRole2HomeScene;		// The shared Scene each invocation populates
 	protected static final int theRole = 3;		// Admin: 1; Role1: 2; Role2: 3
 
+	//HW2 Brenn
+	protected static ComboBox<String> combobox_SelectPostThread = new ComboBox<>();
+	protected static ComboBox<String> combobox_FilterThread = new ComboBox<>();
+	protected static Label label_FilterThread = new Label("Filter by Thread:");
+	protected static Label label_ManageThreads = new Label("Manage Threads:");
+	protected static TextField text_NewThread = new TextField();
+	protected static Button button_AddThread = new Button("Add Thread");
+	protected static Button button_RemoveThread = new Button("Remove Thread");
+	protected static ListView<String> listView_Threads = new ListView<>();
+
 	/*-*******************************************************************************************
 
 	Constructors
