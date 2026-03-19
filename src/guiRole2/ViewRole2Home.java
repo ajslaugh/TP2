@@ -204,8 +204,39 @@ public class ViewRole2Home {
 		setupLabelUI(label_CreatePost, "Arial", 20, 175, Pos.BASELINE_LEFT, 20, 110);
 		setupTextUI(text_PostContent, "Arial", 16, 350, Pos.BASELINE_LEFT,
 		140, 105, true);
-		setupButtonUI(button_Post,  "Dialog", 18, 170, Pos.CENTER, 525, 103);
+		setupButtonUI(button_Post,  "Dialog", 18, 100, Pos.CENTER, 680, 103);
 		button_Post.setOnAction((_) -> {ControllerRole2Home.performNewPost(); postDisplay.setAll(theDatabase.displayPostsHelper());});
+
+		//HW2 Brenn
+		//Constructors for combo box and thread types
+		// Thread selector when posting
+		setupComboBoxUI(combobox_SelectPostThread, "Arial", 14, 130, 500, 108);
+		combobox_SelectPostThread.getItems().setAll(theDatabase.getAllThreadTypes());
+		combobox_SelectPostThread.setValue("General");
+		combobox_SelectPostThread.setMaxWidth(170);
+
+		// Filter bar
+		setupLabelUI(label_FilterThread, "Arial", 16, 140, Pos.BASELINE_LEFT, 20, 165);
+		setupComboBoxUI(combobox_FilterThread, "Arial", 14, 130, 160, 163);
+		List<String> filterOptions = theDatabase.getAllThreadTypes();
+		filterOptions.add(0, "All");
+		combobox_FilterThread.getItems().setAll(filterOptions);
+		combobox_FilterThread.setValue("All");
+		combobox_FilterThread.setOnAction((_) -> { ControllerRole2Home.performFilter(); });
+
+		// Manage threads section
+		setupLabelUI(label_ManageThreads, "Arial", 16, 150, Pos.BASELINE_LEFT, 540, 160);
+		setupTextUI(text_NewThread, "Arial", 14, 150, Pos.BASELINE_LEFT, 540, 190, true);
+		text_NewThread.setPromptText("New thread name...");
+		setupButtonUI(button_AddThread, "Dialog", 14, 150, Pos.CENTER, 540, 220);
+		button_AddThread.setOnAction((_) -> { ControllerRole2Home.performAddThread(); });
+		setupButtonUI(button_RemoveThread, "Dialog", 14, 150, Pos.CENTER, 540, 260);
+		button_RemoveThread.setOnAction((_) -> { ControllerRole2Home.performRemoveThread(); });
+
+		listView_Threads.setPrefSize(150, 120);
+		listView_Threads.setLayoutX(540);
+		listView_Threads.setLayoutY(300);
+		listView_Threads.getItems().setAll(theDatabase.getAllThreadTypes());
 		
 		//GUI Area 3
 	
