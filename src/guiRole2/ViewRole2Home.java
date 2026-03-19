@@ -284,6 +284,14 @@ public class ViewRole2Home {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
     			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,label_CreatePost,text_PostContent,button_Post,
+				combobox_SelectPostThread,
+    			label_FilterThread,
+    			combobox_FilterThread,
+    			label_ManageThreads,
+    			text_NewThread,
+    			button_AddThread,
+    			button_RemoveThread,
+    			listView_Threads,
     	        line_Separator2,displayPosts, line_Separator4, button_Logout, button_Quit);
 	}
 	
