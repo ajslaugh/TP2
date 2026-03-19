@@ -75,7 +75,7 @@ public class ViewRole2Home {
 	
 	
 	//Gui area 3: Shows all posts within database from general
-	ObservableList<String> postDisplay = FXCollections.observableArrayList();
+	protected static ObservableList<String> postDisplay = FXCollections.observableArrayList();
 	ListView<String> displayPosts = new ListView<>();
 	protected static Alert alertNotImplemented = new Alert(AlertType.INFORMATION);
 	protected static Alert alertPosted = new Alert(AlertType.INFORMATION);
