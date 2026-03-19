@@ -301,6 +301,15 @@ public class ViewRole2Home {
 	Helper methods to reduce code length
 
 	 */
+
+	//HW2 Brenn combobox helper
+	protected static void setupComboBoxUI(ComboBox<String> c, String ff, double f,
+	        double w, double x, double y) {
+	    c.setStyle("-fx-font: " + f + " " + ff + ";");
+	    c.setMinWidth(w);
+	    c.setLayoutX(x);
+	    c.setLayoutY(y);
+	}
 	
 	/**********
 	 * Private local method to initialize the standard fields for a label
