@@ -79,7 +79,10 @@ public class ViewRole1Home {
 	protected static Alert alertNotImplemented = new Alert(AlertType.INFORMATION);
 	protected static Alert alertPosted = new Alert(AlertType.INFORMATION);
 	
-
+	//HW2 Brenn
+	protected static ComboBox<String> combobox_SelectPostThread = new ComboBox<>();
+	protected static ComboBox<String> combobox_FilterThread = new ComboBox<>();
+	protected static Label label_FilterThread = new Label("Filter by Thread:");
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
