@@ -163,7 +163,7 @@ public class Database {
 		
 	    statement.execute(postTable);
 	    
-	//HW2 reply table 
+	//Alex reply table 
 	String replyTable="CREATE TABLE IF NOT EXISTS userReplies(" 
 			+ "id INT AUTO_INCREMENT PRIMARY KEY,"
 			+ "replyTo INT,"
@@ -172,16 +172,19 @@ public class Database {
     		+ "role VARCHAR(255), "
     		+ "thread VARCHAR(255) DEFAULT 'General')";
 	
-    statement.execute(replyTable);}
-	//HW2 thread table
+    statement.execute(replyTable);
+	
+	// thread table
 	String threadTable = "CREATE TABLE IF NOT EXISTS threadTypes("
         + "id INT AUTO_INCREMENT PRIMARY KEY,"
         + "thread_name VARCHAR(255) UNIQUE)";
-statement.execute(threadTable);
+		statement.execute(threadTable);
 
-statement.execute("INSERT INTO threadTypes (thread_name) "
-        + "SELECT 'General' WHERE NOT EXISTS "
-        + "(SELECT 1 FROM threadTypes WHERE thread_name = 'General')");
+	statement.execute("INSERT INTO threadTypes (thread_name) "
+        + "SELECT 'General' WHERE NOT EXISTS ("
+        + "SELECT 1 FROM threadTypes WHERE thread_name = 'General'"
+        +")"
+        );}
 
 /*******
  * <p> Method: isDatabaseEmpty </p>
@@ -233,7 +236,7 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return the number of user post records in the database.
 	 * 
 	 */
-	//HW2 get number of posts
+	//Alex get number of posts
 	public int getNumberOfPosts() {
 		String query = "SELECT COUNT(*) AS count FROM userPosts";
 		try {
@@ -255,8 +258,8 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return 
 	 * 
 	 */
-	//HW2 createpost
-   public void addPost(Post post) throws SQLException{
+	//Alex add Post
+   public int addPost(Post post) throws SQLException{
 	   String addPost = "INSERT INTO userPosts (post, username, role, thread)"
 			   + "VALUES (?, ?, ?, ?)";
 	   try (PreparedStatement pstmt = connection.prepareStatement(addPost)){
@@ -273,7 +276,17 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 		   pstmt.setString(4,  thisThread);
 		   
 		   pstmt.executeUpdate();
-	   }}
+		   
+		   ResultSet rs = pstmt.getGeneratedKeys();
+		    if (rs.next()) {
+		        return rs.getInt(1); //post_id
+		    }
+		    else return 0;
+	   }
+	   
+	  
+	   
+	   }
    
    /*******
 	 * <p> Method: addReply(reply) </p>
@@ -283,7 +296,7 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return 
 	 * 
 	 */
-	   //Hw2 create reply
+	   //Alex create reply
 	   public void addReply(Reply reply) throws SQLException{
 		   String addReply = "INSERT INTO userReplies (replyTo, post, username, role, thread)"
 				   + "VALUES (?, ?, ?, ?, ?)";
@@ -307,50 +320,6 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 		   }	   
 	   
    }
-
-		//HW2 Brenn 
-	   //get all current thread types
-	   public List<String> getAllThreadTypes() {
-		    List<String> threads = new ArrayList<>();
-		    String query = "SELECT thread_name FROM threadTypes";
-		    try (PreparedStatement pstmt = connection.prepareStatement(query);
-		         ResultSet rs = pstmt.executeQuery()) {
-		        while (rs.next()) {
-		            threads.add(rs.getString("thread_name"));
-		        }
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		    }
-		    return threads;
-		}
-	   
-	   //HW2 Brenn
-	   //Staff adds a new thread type
-	   public boolean addThreadType(String threadName) {
-		    String query = "INSERT INTO threadTypes (thread_name) VALUES (?)";
-		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-		        pstmt.setString(1, threadName);
-		        pstmt.executeUpdate();
-		        return true;
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        return false;
-		    }
-		}
-	   
-	   //HW2 Brenn
-	   //Staff removes a thread type
-	   public boolean removeThreadType(String threadName) {
-		    String query = "DELETE FROM threadTypes WHERE thread_name = ?";
-		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-		        pstmt.setString(1, threadName);
-		        pstmt.executeUpdate();
-		        return true;
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        return false;
-		    }
-		}
 
 /*******
  * <p> Method: register(User user) </p>
@@ -435,6 +404,73 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	    return usernames;
 	}
 	
+	//HW2 Brenn 
+	   //get all current thread types
+	   public List<String> getAllThreadTypes() {
+		    List<String> threads = new ArrayList<>();
+		    String query = "SELECT thread_name FROM threadTypes";
+		    try (PreparedStatement pstmt = connection.prepareStatement(query);
+		         ResultSet rs = pstmt.executeQuery()) {
+		        while (rs.next()) {
+		            threads.add(rs.getString("thread_name"));
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    return threads;
+		}
+	   
+	   //HW2 Brenn
+	   //Staff adds a new thread type
+	   public boolean addThreadType(String threadName) {
+		    String query = "INSERT INTO threadTypes (thread_name) VALUES (?)";
+		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+		        pstmt.setString(1, threadName);
+		        pstmt.executeUpdate();
+		        return true;
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
+	   
+	   //HW2 Brenn
+	   //Staff removes a thread type
+	   public boolean removeThreadType(String threadName) {
+		    String query = "DELETE FROM threadTypes WHERE thread_name = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+		        pstmt.setString(1, threadName);
+		        pstmt.executeUpdate();
+		        return true;
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
+
+	 //HW2 Brenn
+		//get posts by thread
+		public ObservableList<Post> getPostsByThread(String thread) {
+		    ObservableList<Post> postDisplay = FXCollections.observableArrayList();
+		    Post newPost;
+		    String query = "SELECT post, username, role, thread, number FROM userPosts WHERE thread = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+		        pstmt.setString(1, thread);
+		        ResultSet rs = pstmt.executeQuery();
+		        while(rs.next()) {
+		        	if(rs.getString("thread") == thread) {
+		        		newPost = new Post(rs.getString("username"), rs.getString("role"), rs.getString("post"), rs.getString("thread"));
+		        		newPost.setID(rs.getInt("number"));
+		        		postDisplay.add(newPost);
+		        	}
+		        }}
+				catch(SQLException e) {
+					e.printStackTrace();
+					return postDisplay;
+				}
+		    return postDisplay;
+		}
+	
 	
 
 
@@ -476,51 +512,10 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return List<String[]>
 	 * 
 	 */
-	//HW2 get all posts
-	public List<String[]>getAllPosts() {
-		List<String[]> posts = new ArrayList<>();
-		String query = "SELECT post, username, role, thread FROM userPosts";
-		
-		try(PreparedStatement pstmt = connection.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery()){
-				
-			while(rs.next()) {
-				String[] post = new String[4];
-				post[0] = rs.getString("username");
-	            post[1] = rs.getString("post");
-	            post[2] = rs.getString("role");
-	            post[3] = rs.getString("thread");
-	            posts.add(post);
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-			return new ArrayList<>();
-			}
-				
-		return posts;
-		
-	}
+	
+	
 
-	//HW2 Brenn
-	//get posts by thread
-	public ObservableList<String> getPostsByThread(String thread) {
-	    ObservableList<String> postDisplay = FXCollections.observableArrayList();
-	    String query = "SELECT post, username, role, thread FROM userPosts WHERE thread = ?";
-	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	        pstmt.setString(1, thread);
-	        ResultSet rs = pstmt.executeQuery();
-	        while (rs.next()) {
-	            postDisplay.add(String.format("%s %s to %s thread: %s",
-	                rs.getString("role"),
-	                rs.getString("username"),
-	                rs.getString("thread"),
-	                rs.getString("post")));
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return postDisplay;
-	}
+	
 
 	/*******
 	 * <p> Method: isOwnPost(int postnum) </p>
@@ -530,24 +525,16 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return isownPost boolean 
 	 * 
 	 */
-	//Hw2
-	public boolean isOwnPost(int postnum) {
-		String query = "SELECT number, username FROM userPosts";
-		try(PreparedStatement pstmt = connection.prepareStatement(query);
-			ResultSet rs = pstmt.executeQuery()){
-			while(rs.next()) {
-				int num = rs.getInt("number");
-				String name = rs.getString("username");
-				if(num == postnum) {
-					if(name == currentUsername) {
-						return true;
-					}
-				}
-			}
+	//Alex is own post
+	public boolean isOwnPost(Post post) {
+		String author = post.getAuthor();
+		if(currentUsername.equals(author)) {
+			return true;
 		}
-		catch (SQLException e) {
-			e.printStackTrace();}
-		return false;
+		else {
+			return false;
+		}
+		
 				
 	}
 	/*******
@@ -558,7 +545,7 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return List<String[]> replies 
 	 * 
 	 */
-	//hw2
+	//Alex Get replylist
 	public List<String[]>getRepliesFromPost(int ogPost){
 		List<String[]> replies = new ArrayList<>();
 		String query = "SELECT replyTo, post, username, role, thread FROM userReplies";
@@ -592,20 +579,26 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return ObservableList<String> postDisplay
 	 * 
 	 */
-	//hw2
-	public ObservableList<String> displayPostsHelper() {
-		ObservableList<String> postDisplay = FXCollections.observableArrayList();
-		List<String[]> posts = getAllPosts();
+
+	public ObservableList<Post> displayPostHelper(){
+		ObservableList<Post> postDisplay = FXCollections.observableArrayList();
+		Post newPost;
+		String query = "SELECT post, username, role, thread, number FROM userPosts";
 		
-	
-		for (String[] post : posts) {
-			postDisplay.add(String.format("%s %s to %s thread: %s", 
-			post[2], post[0], post[3], post[1]));}
-		
-		return postDisplay;
-	}
-	
-	
+		try(PreparedStatement pstmt = connection.prepareStatement(query);
+				ResultSet rs = pstmt.executeQuery()){
+			
+			while(rs.next()) {
+				newPost = new Post(rs.getString("username"), rs.getString("role"), rs.getString("post"), rs.getString("thread"));
+				newPost.setID(rs.getInt("number"));
+				postDisplay.add(newPost);
+			}}
+			catch(SQLException e) {
+				e.printStackTrace();
+				return postDisplay;
+			}
+			return postDisplay;
+		}	
 		
 
 	
@@ -1019,10 +1012,11 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	 * @return boolean deleted  
 	 * 
 	 */
-	public boolean deletePost(int id) {
+	public boolean deletePost(Post post) {
 		String query = "DELETE FROM userPosts WHERE number = ?";
+		int postID = post.getID();
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	        pstmt.setInt(1, id);
+	        pstmt.setInt(1, postID);
 	        return pstmt.executeUpdate() > 0;
 	        
 	    } catch (SQLException e) {
@@ -1754,3 +1748,4 @@ statement.execute("INSERT INTO threadTypes (thread_name) "
 	}
 
 }
+
