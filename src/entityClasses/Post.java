@@ -24,6 +24,7 @@ public class Post {
     private String content;
     private String role;
     private String thread;
+    private int postID;
     
     
     
@@ -62,7 +63,12 @@ public class Post {
         this.role2 = r3; */
     }
     
+    public int getID() {return postID;}    
     
+    public String toString() {
+    	return String.format("%s %s to %s thread: %s", role, author, thread, content);
+    	
+    }
 
 
     
@@ -119,6 +125,7 @@ public class Post {
     public void setAuthor(String s) { author = s; }
     public void setRole(String s) { role = s; }
     public void setThread(String s) { thread = s; }
+    public void setID(int s) {postID = s;}
     
     
     
